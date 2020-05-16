@@ -1,9 +1,13 @@
 from __future__ import annotations
 from typing import Optional
+from snake.utils import Direction
 
 
 class Node:
-    def __init__(self, next: Optional[Node] = None):
+    def __init__(self, x: int, y: int, direction: Direction, next: Optional[Node] = None):
+        self.x = x
+        self.y = x
+        self.direction = direction
         self._next = next
 
     @property

@@ -1,4 +1,4 @@
-import snake
+from snake import snake
 
 def test_snake_speed_getter():
     s = snake.Snake()

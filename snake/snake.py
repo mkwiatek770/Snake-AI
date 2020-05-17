@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 from typing import List, Collection
 from snake.node import Node
@@ -16,7 +15,7 @@ class Snake:
     @property
     def head(self) -> Node:
         return self._nodes[0]
-    
+
     @property
     def speed(self) -> int:
         return self._speed
@@ -26,10 +25,10 @@ class Snake:
         return self.alive
 
     def turn(self, direction: Direction):
-        if (direction == Direction.left and self.head.direction == Direction.right or 
-            direction == Direction.right and self.head.direction == Direction.left or
-            direction == Direction.up and self.head.direction == Direction.down or
-            direction == Direction.down and self.head.direction == Direction.up):
+        if (direction == Direction.left and self.head.direction == Direction.right or
+                direction == Direction.right and self.head.direction == Direction.left or
+                direction == Direction.up and self.head.direction == Direction.down or
+                direction == Direction.down and self.head.direction == Direction.up):
             return
         self._turns.append((self.head.x, self.head.y, direction))
 

@@ -7,16 +7,16 @@ class App:
         self._running = True
         self._display_surf = None
         self.size = self.width, self.height = (640, 400)
-    
+
     def on_init(self) -> None:
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
-    
+
     def on_event(self, event) -> None:
         if event.type == pygame.QUIT:
             self._running = False
-    
+
     def on_loop(self) -> None:
         pass
 
@@ -35,7 +35,7 @@ class App:
                 self.on_event(event)
             self.on_loop()
             self.on_render()
-        self.on_cleanup() 
+        self.on_cleanup()
 
 
 if __name__ == "__main__":

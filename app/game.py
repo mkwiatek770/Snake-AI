@@ -1,12 +1,15 @@
 
 import pygame
+from app.snake import Snake
 
 
 class App:
     def __init__(self):
         self._running = True
         self._display_surf = None
-        self.size = self.width, self.height = (640, 400)
+        self._image_surf = None
+        self.size = self.width, self.height = 640, 400
+        self.snake = Snake()
 
     def on_init(self) -> None:
         pygame.init()
@@ -21,7 +24,9 @@ class App:
         pass
 
     def on_render(self) -> None:
-        pass
+        self._display_surf.fill((0, 0, 0))
+        self._display_surf.blit(self._image_surf, (self.player.x, self.player.y))
+        pygame.display.flip()
 
     def on_cleanup(self) -> None:
         pygame.quit()

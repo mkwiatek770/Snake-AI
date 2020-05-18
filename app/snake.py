@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List, Collection
-from snake.node import Node
-from snake.utils import Direction
+from app.node import Node
+from app.utils import Direction
 
 
 class Snake:

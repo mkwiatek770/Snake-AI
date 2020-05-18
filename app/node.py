@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional
-from snake.utils import Direction
+from app.utils import Direction
 
 
 class Node:

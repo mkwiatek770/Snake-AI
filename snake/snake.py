@@ -30,7 +30,7 @@ class Snake:
                 direction == Direction.up and self.head.direction == Direction.down or
                 direction == Direction.down and self.head.direction == Direction.up):
             return
-        self._turns.append((self.head.x, self.head.y, direction))
+        self._turns.append(Node(self.head.x, self.head.y, direction))
 
     def move(self):
         pass

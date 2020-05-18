@@ -1,6 +1,7 @@
 
 import pygame
 from app.snake import Snake
+from app.food import Food
 
 
 class App:
@@ -10,6 +11,7 @@ class App:
         self._image_surf = None
         self.size = self.width, self.height = 640, 400
         self.snake = Snake()
+        self.food = Food(self.width / 2, self.height / 2)
 
     def on_init(self) -> None:
         pygame.init()
@@ -25,7 +27,9 @@ class App:
 
     def on_render(self) -> None:
         self._display_surf.fill((0, 0, 0))
-        self._display_surf.blit(self._image_surf, (self.player.x, self.player.y))
+        pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, self.food.size, self.food.size], 0)
+        # for node in self.snake.nodes:
+        #     self._display_surf.blit(self._image_surf, (node.x, node.y))
         pygame.display.flip()
 
     def on_cleanup(self) -> None:

@@ -21,6 +21,10 @@ class Snake:
         return self._speed
 
     @property
+    def nodes(self) -> Collection[Node]:
+        return self._nodes
+
+    @property
     def is_alive(self) -> bool:
         return self.alive
 

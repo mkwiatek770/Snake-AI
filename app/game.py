@@ -27,7 +27,8 @@ class App:
 
     def on_render(self) -> None:
         self._display_surf.fill((0, 0, 0))
-        pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, self.food.size, self.food.size], 0)
+        self._draw_food()
+        self._draw_snake()
         # for node in self.snake.nodes:
         #     self._display_surf.blit(self._image_surf, (node.x, node.y))
         pygame.display.flip()
@@ -45,6 +46,12 @@ class App:
             self.on_loop()
             self.on_render()
         self.on_cleanup()
+
+    def _draw_food(self):
+        pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, self.food.size, self.food.size], 0)
+
+    def _draw_snake(self):
+        pass
 
 
 if __name__ == "__main__":

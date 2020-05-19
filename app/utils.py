@@ -1,8 +1,9 @@
 from enum import Enum
 
+NODE_SIZE = 10
 
 class Direction(Enum):
-    up = 1
-    down = 2
-    left = 3
-    right = 4
+    up = 'UP'
+    down = 'DOWN'
+    left = 'LEFT'
+    right = 'RIGHT'

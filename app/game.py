@@ -2,7 +2,10 @@
 import pygame
 from app.snake import Snake
 from app.food import Food
+from app.utils import NODE_SIZE
 
+
+FPS = 30
 
 class App:
     def __init__(self):
@@ -12,6 +15,19 @@ class App:
         self.size = self.width, self.height = 640, 400
         self.snake = Snake()
         self.food = Food(self.width / 2, self.height / 2)
+        self.fps_clock = pygame.time.Clock()
+
+    def run(self) -> None:
+        if self.on_init() is False:
+            self._running = False
+
+        while self._running:
+            for event in pygame.event.get():
+                self.on_event(event)
+            self.on_loop()
+            self.on_render()
+            self.fps_clock.tick(FPS)
+        self.on_cleanup()
 
     def on_init(self) -> None:
         pygame.init()
@@ -23,38 +39,25 @@ class App:
             self._running = False
 
     def on_loop(self) -> None:
-        pass
+        self.snake.move()
 
     def on_render(self) -> None:
         self._display_surf.fill((0, 0, 0))
         self._draw_food()
         self._draw_snake()
-        # for node in self.snake.nodes:
-        #     self._display_surf.blit(self._image_surf, (node.x, node.y))
         pygame.display.flip()
 
     def on_cleanup(self) -> None:
         pygame.quit()
 
-    def on_execute(self) -> None:
-        if self.on_init() is False:
-            self._running = False
-
-        while self._running:
-            for event in pygame.event.get():
-                self.on_event(event)
-            self.on_loop()
-            self.on_render()
-        self.on_cleanup()
-
     def _draw_food(self):
-        pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, self.food.size, self.food.size], 0)
+        pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, NODE_SIZE, NODE_SIZE], 0)
 
     def _draw_snake(self):
         for node in self.snake.nodes:
-            pygame.draw.rect(self._display_surf, (255, 255, 255), [node.x, node.y, node.size, node.size], 0)
+            pygame.draw.rect(self._display_surf, (255, 255, 255), [node.x, node.y, NODE_SIZE, NODE_SIZE], 0)
 
 
 if __name__ == "__main__":
     app = App()
-    app.on_execute()
+    app.run()

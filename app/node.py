@@ -4,9 +4,6 @@ from app.utils import Direction
 
 
 class Node:
-
-    size = 10
-
     def __init__(self, x: int, y: int, direction: Direction, next_node: Optional[Node] = None):
         self.x = x
         self.y = y

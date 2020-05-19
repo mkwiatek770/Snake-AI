@@ -51,7 +51,8 @@ class App:
         pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, self.food.size, self.food.size], 0)
 
     def _draw_snake(self):
-        pass
+        for node in self.snake.nodes:
+            pygame.draw.rect(self._display_surf, (255, 255, 255), [node.x, node.y, node.size, node.size], 0)
 
 
 if __name__ == "__main__":

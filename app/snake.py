@@ -9,7 +9,7 @@ class Snake:
     alive: bool = True
 
     def __init__(self, nodes: Collection[Node] = None, turns: Collection[Node] = None):
-        self._nodes = list(nodes) if nodes else [Node(5, i, Direction.up) for i in range(5, 2)]
+        self._nodes = list(nodes) if nodes else [Node(100, i, Direction.up) for i in range(100, 130, Node.size)]
         self._turns = list(turns) if turns else []
 
     @property

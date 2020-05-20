@@ -2,10 +2,10 @@
 import pygame
 from app.snake import Snake
 from app.food import Food
-from app.utils import NODE_SIZE
-
+from app.utils import NODE_SIZE, Direction
 
 FPS = 30
+
 
 class App:
     def __init__(self):
@@ -37,6 +37,15 @@ class App:
     def on_event(self, event) -> None:
         if event.type == pygame.QUIT:
             self._running = False
+        if event.type == pygame.KEYUP:
+            if event.key in (pygame.K_a, pygame.K_LEFT):
+                self.snake.turn(Direction.left)
+            elif event.key in (pygame.K_d, pygame.K_RIGHT):
+                self.snake.turn(Direction.right)
+            elif event.key in (pygame.K_w, pygame.K_UP):
+                self.snake.turn(Direction.up)
+            elif event.key in (pygame.K_s, pygame.K_DOWN):
+                self.snake.turn(Direction.down)
 
     def on_loop(self) -> None:
         self.snake.move()

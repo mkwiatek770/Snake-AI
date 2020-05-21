@@ -11,6 +11,7 @@ All logic is inside `app` package. `test` directory is responsible for asserting
 * `app/node.py` - The unit upon which other game instances like snake, food are build.
 
 ## Game rules
+- Snake dies whenever it hits the wall or itself
 
 ## Useful commands
 `python app/game.py` - start game

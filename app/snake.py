@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Collection
+from typing import Collection, Tuple
 from app.node import Node
 from app.utils import Direction, NODE_SIZE
 
@@ -8,9 +8,10 @@ class Snake:
     _speed: int = 3
     alive: bool = True
 
-    def __init__(self, nodes: Collection[Node] = None, turns: Collection[Node] = None):
+    def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None, turns: Collection[Node] = None):
         self._nodes = list(nodes) if nodes else [Node(100, i, Direction.up) for i in range(100, 130, NODE_SIZE)]
         self._turns = list(turns) if turns else []
+        self._window_size = w_size
 
     @property
     def head(self) -> Node:
@@ -42,7 +43,7 @@ class Snake:
                 direction.value == 'UP' and current_direction == 'DOWN' or
                 direction.value == 'DOWN' and current_direction == 'UP'):
             return
-        print("Turn {}".format(direction.value))
+
         self._turns.append(Node(self.head.x, self.head.y, direction))
 
     def move(self):
@@ -68,6 +69,8 @@ class Snake:
 
     def check_collision(self) -> bool:
         x, y = self.head.x, self.head.y
+        if x <= 0 or x >= self._window_size[0] or y <= 0 or y >= self._window_size[1]:
+            return True
         for node in self.nodes[1:]:
             if x == node.x and y == node.y:
                 return True

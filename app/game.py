@@ -13,7 +13,7 @@ class App:
         self._display_surf = None
         self._image_surf = None
         self.size = self.width, self.height = 640, 400
-        self.snake = Snake()
+        self.snake = Snake(self.size)
         self.food = Food(self.width / 2, self.height / 2)
         self.fps_clock = pygame.time.Clock()
 
@@ -21,7 +21,7 @@ class App:
         if self.on_init() is False:
             self._running = False
 
-        while self._running:
+        while self.snake.is_alive:
             for event in pygame.event.get():
                 self.on_event(event)
             self.on_loop()

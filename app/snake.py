@@ -5,7 +5,7 @@ from app.utils import Direction, NODE_SIZE
 
 
 class Snake:
-    _speed: int = 3
+    _speed: int = 5
     alive: bool = True
 
     def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None, turns: Collection[Node] = None):
@@ -51,18 +51,11 @@ class Snake:
 
     def move(self):
         for node in self.nodes:
-
             if node.has_turns():
                 next_turn = node.next_turn
+
                 if node.x == next_turn.x and node.y == next_turn.y:
                     node.turn()
-
-            # for turn in self._turns:
-            #     if node.x == turn.x and node.y == node.y:
-            #         node.direction = turn.direction
-            #         if node == self.tail:
-            #             self._turns.remove(turn)
-
             direction = node.direction.value
             if direction == 'UP':
                 node.y -= self.speed

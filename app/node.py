@@ -1,20 +1,28 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Collection
 from app.utils import Direction
 
 
 class Node:
-    def __init__(self, x: int, y: int, direction: Direction, next_node: Optional[Node] = None):
+    def __init__(self, x: int, y: int, direction: Direction):
         self.x = x
         self.y = y
         self.direction = direction
-        self._next_node = next_node
+        self._turns = []
 
     @property
-    def next_node(self) -> Node:
-        return self._next_node
+    def turns(self) -> Collection[Node]:
+        return self._turns
 
-    @next_node.setter
-    def next_node(self, value: Node) -> None:
-        if isinstance(value, Node):
-            self._next_node = value
+    @property
+    def next_turn(self) -> Node:
+        return self._turns[0]
+
+    def has_turns(self) -> bool:
+        return len(self._turns) != 0
+
+    def add_turn(self, turn: Node) -> None:
+        self._turns.append(turn)
+
+    def turn(self) -> None:
+        self.direction = self._turns.pop(0).direction

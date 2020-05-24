@@ -1,11 +1,11 @@
 from __future__ import annotations
 from typing import Collection, Tuple
 from app.node import Node
-from app.utils import Direction, NODE_SIZE
+from app.utils import Direction, NODE_SIZE, Speed
 
 
 class Snake:
-    _speed: int = 5
+    _speed: int = Speed.normal.value
     alive: bool = True
 
     def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None, turns: Collection[Node] = None):

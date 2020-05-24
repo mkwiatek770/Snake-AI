@@ -77,3 +77,6 @@ class Snake:
             if x == node.x and y == node.y:
                 return True
         return False
+
+    def check_food_collision(self, food_x: int, food_y: int) -> bool:
+        return abs(self.head.x - food_x) <= NODE_SIZE and abs(self.head.y - food_y) <= NODE_SIZE

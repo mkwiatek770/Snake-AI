@@ -1,4 +1,4 @@
-
+import random
 import pygame
 from app.snake import Snake
 from app.food import Food
@@ -16,6 +16,7 @@ class App:
         self.snake = Snake(self.size)
         self.food = Food(self.width / 2, self.height / 2)
         self.fps_clock = pygame.time.Clock()
+        self.points = 0
 
     def run(self) -> None:
         if self.on_init() is False:
@@ -49,6 +50,9 @@ class App:
 
     def on_loop(self) -> None:
         self.snake.move()
+        if self.snake.check_food_collision(self.food.x, self.food.y):
+            self._new_food()
+            self._add_points()
 
     def on_render(self) -> None:
         self._display_surf.fill((0, 0, 0))
@@ -59,13 +63,28 @@ class App:
     def on_cleanup(self) -> None:
         pygame.quit()
 
-    def _draw_food(self):
+    def _draw_food(self) -> None:
         pygame.draw.rect(self._display_surf, (255, 0, 0), [self.food.x, self.food.y, NODE_SIZE, NODE_SIZE], 0)
 
-    def _draw_snake(self):
+    def _draw_snake(self) -> None:
         for node in self.snake.nodes:
             pygame.draw.rect(self._display_surf, (255, 255, 255), [node.x, node.y, NODE_SIZE, NODE_SIZE], 0)
 
+    def _new_food(self) -> None:
+        snake_intersection = True
+        while snake_intersection:
+            new_x = random.randint(0, self.width - NODE_SIZE)
+            new_y = random.randint(0, self.height - NODE_SIZE)
+            for node in self.snake.nodes:
+                if abs(new_x - node.x) <= NODE_SIZE and abs(new_y - node.y) <= NODE_SIZE:
+                    break
+            else:
+                snake_intersection = False
+        self.food = Food(new_x, new_y)
+
+    def _add_points(self) -> None:
+        self.points += 1
+        print(f"Points: {self.points}")
 
 if __name__ == "__main__":
     app = App()

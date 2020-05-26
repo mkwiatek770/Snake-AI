@@ -19,8 +19,7 @@ class App:
         self.points = 0
 
     def run(self) -> None:
-        if self.on_init() is False:
-            self._running = False
+        self.on_init()
 
         while self.snake.is_alive:
             for event in pygame.event.get():

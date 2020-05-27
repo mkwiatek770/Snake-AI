@@ -1,5 +1,8 @@
 import random
+
 import pygame
+import pygame.font
+
 from app.snake import Snake
 from app.food import Food
 from app.utils import NODE_SIZE, Direction
@@ -36,6 +39,7 @@ class App:
         total_size = (self.game_size[0] + self.sidebar_size[0], self.game_size[1])
         self._display_surf = pygame.display.set_mode(total_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
+        self.font = pygame.font.Font(pygame.font.get_default_font(), 24)
 
     def on_event(self, event) -> None:
         if event.type == pygame.QUIT:
@@ -75,6 +79,8 @@ class App:
 
     def _draw_sidebar_info(self):
         pygame.draw.line(self._display_surf, (255, 255, 255), (self.width, 0), (self.width, self.height))
+        text_surface = self.font.render(f'Score: {self.points}', True, (255, 0, 0))
+        self._display_surf.blit(text_surface, dest=(self.width + 40, 40))
 
     def _new_food(self) -> None:
         snake_intersection = True

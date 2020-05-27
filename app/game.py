@@ -8,12 +8,14 @@ FPS = 30
 
 
 class App:
+    game_size = width, height = 640, 400
+    sidebar_size = s_width, s_height = 300, height
+
     def __init__(self):
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.size = self.width, self.height = 640, 400
-        self.snake = Snake(self.size)
+        self.snake = Snake(self.game_size)
         self.food = Food(self.width / 2, self.height / 2)
         self.fps_clock = pygame.time.Clock()
         self.points = 0
@@ -31,7 +33,8 @@ class App:
 
     def on_init(self) -> None:
         pygame.init()
-        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        total_size = (self.game_size[0] + self.sidebar_size[0], self.game_size[1])
+        self._display_surf = pygame.display.set_mode(total_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
 
     def on_event(self, event) -> None:
@@ -57,6 +60,7 @@ class App:
         self._display_surf.fill((0, 0, 0))
         self._draw_food()
         self._draw_snake()
+        self._draw_sidebar_info()
         pygame.display.flip()
 
     def on_cleanup(self) -> None:
@@ -68,6 +72,9 @@ class App:
     def _draw_snake(self) -> None:
         for node in self.snake.nodes:
             pygame.draw.rect(self._display_surf, (255, 255, 255), [node.x, node.y, NODE_SIZE, NODE_SIZE], 0)
+
+    def _draw_sidebar_info(self):
+        pygame.draw.line(self._display_surf, (255, 255, 255), (self.width, 0), (self.width, self.height))
 
     def _new_food(self) -> None:
         snake_intersection = True
@@ -84,6 +91,7 @@ class App:
     def _add_points(self) -> None:
         self.points += 1
         print(f"Points: {self.points}")
+
 
 if __name__ == "__main__":
     app = App()

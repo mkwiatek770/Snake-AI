@@ -1,4 +1,5 @@
 from __future__ import annotations
+import copy
 from typing import Collection, Tuple
 from app.node import Node
 from app.utils import Direction, NODE_SIZE, Speed
@@ -68,6 +69,19 @@ class Snake:
 
         if self.check_collision():
             self.alive = False
+
+    def eat(self) -> None:
+        new_node = copy.deepcopy(self.tail)
+        direction = self.tail.direction.value
+        if direction == 'UP':
+            new_node.y += self.speed
+        elif direction == 'DOWN':
+            new_node.y -= self.speed
+        elif direction == 'LEFT':
+            new_node.x += self.speed
+        elif direction == 'RIGHT':
+            new_node.x -= self.speed
+        self._nodes.append(new_node)
 
     def check_collision(self) -> bool:
         x, y = self.head.x, self.head.y

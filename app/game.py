@@ -59,6 +59,7 @@ class App:
         if self.snake.check_food_collision(self.food.x, self.food.y):
             self._new_food()
             self._add_points()
+            self.snake.eat()
 
     def on_render(self) -> None:
         self._display_surf.fill((0, 0, 0))

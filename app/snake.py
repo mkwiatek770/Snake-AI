@@ -16,11 +16,11 @@ class Snake:
 
     @property
     def head(self) -> Node:
-        return self.nodes[0]
+        return self._nodes[0]
 
     @property
     def tail(self) -> Node:
-        return self.nodes[-1]
+        return self._nodes[-1]
 
     @property
     def speed(self) -> int:

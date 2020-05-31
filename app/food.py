@@ -1,5 +1,3 @@
-
-
 class Food:
     def __init__(self, x: int, y: int) -> None:
         self.x = int(x)

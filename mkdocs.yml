@@ -1,1 +1,4 @@
 site_name: Snake AI
+nav:
+    - Home: index.md
+    - About: specification.md

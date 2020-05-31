@@ -11,7 +11,6 @@ class Snake:
 
     def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None, turns: Collection[Node] = None):
         self._nodes = list(nodes) if nodes else [Node(100, i, Direction.up) for i in range(100, 130, NODE_SIZE)]
-        self._turns = list(turns) if turns else []
         self._window_size = w_size
 
     @property

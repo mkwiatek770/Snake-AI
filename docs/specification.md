@@ -23,6 +23,27 @@ actions
 - check_collision()
 - check_food_collision()
 
-* `app/snake.py` - Logic for snake that is build from `nodes`.
-* `app/food.py` - Module responsible for generating and redrawing food which is single `node`.
-* `app/node.py` - The unit upon which other game instances like snake, food are build.
+## Food
+filename: `app/food.py`
+
+attributes
+
+- `x` - width coordinate
+- `y` - height coordinate
+
+## Node
+filename: `app/node.py`
+
+attributes and properties
+
+- `x` - width coordinate
+- `y` - height coordinate
+- `direction` - enum with one of possible direction (UP, DOWN, LEFT, RIGHT)
+- `_turns` - list of Node objects which are list of specific node directions LIFO structure
+- `turns` - property which returns list of turn.
+- `next_turn` - return soonest turn
+
+actions
+- `has_turns()` - boolean that tells whether node has any following turns
+- `add_turn()` - add turn at the end of queue (LIFO)
+- `turn()` - make turn which means - remove fist element from list.

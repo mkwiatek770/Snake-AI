@@ -7,19 +7,20 @@ from app.snake import Snake
 from app.food import Food
 from app.utils import NODE_SIZE, Direction
 
-FPS = 30
+FPS = 15
+AREA_WIDTH = 640
+SIDEBAR_WIDTH = 300
+HEIGHT = 400
 
 
 class App:
-    game_size = width, height = 640, 400
-    sidebar_size = s_width, s_height = 300, height
 
     def __init__(self):
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.snake = Snake(self.game_size)
-        self.food = Food(self.width / 2, self.height / 2)
+        self.snake = Snake((AREA_WIDTH, HEIGHT))
+        self.food = Food(AREA_WIDTH // 2, HEIGHT // 2)
         self.fps_clock = pygame.time.Clock()
         self.points = 0
 
@@ -36,7 +37,7 @@ class App:
 
     def on_init(self) -> None:
         pygame.init()
-        total_size = (self.game_size[0] + self.sidebar_size[0], self.game_size[1])
+        total_size = (AREA_WIDTH + SIDEBAR_WIDTH, HEIGHT)
         self._display_surf = pygame.display.set_mode(total_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._running = True
         self.font = pygame.font.Font(pygame.font.get_default_font(), 24)
@@ -79,17 +80,17 @@ class App:
             pygame.draw.rect(self._display_surf, (255, 255, 255), [node.x, node.y, NODE_SIZE, NODE_SIZE], 0)
 
     def _draw_sidebar_info(self):
-        pygame.draw.line(self._display_surf, (255, 255, 255), (self.width, 0), (self.width, self.height))
+        pygame.draw.line(self._display_surf, (255, 255, 255), (AREA_WIDTH, 0), (AREA_WIDTH, HEIGHT))
         text_surface = self.font.render(f'Score: {self.points}', True, (255, 0, 0))
-        self._display_surf.blit(text_surface, dest=(self.width + 40, 40))
+        self._display_surf.blit(text_surface, dest=(AREA_WIDTH + 40, 40))
 
     def _new_food(self) -> None:
         snake_intersection = True
         while snake_intersection:
-            new_x = random.randint(0, self.width - NODE_SIZE)
-            new_y = random.randint(0, self.height - NODE_SIZE)
+            new_x = random.randint(0, AREA_WIDTH // NODE_SIZE) * NODE_SIZE
+            new_y = random.randint(0, HEIGHT // NODE_SIZE) * NODE_SIZE
             for node in self.snake.nodes:
-                if abs(new_x - node.x) <= NODE_SIZE and abs(new_y - node.y) <= NODE_SIZE:
+                if node.x == new_x and node.y == new_y:
                     break
             else:
                 snake_intersection = False
@@ -97,7 +98,6 @@ class App:
 
     def _add_points(self) -> None:
         self.points += 1
-        print(f"Points: {self.points}")
 
 
 if __name__ == "__main__":

@@ -6,10 +6,10 @@ from app.utils import Direction, NODE_SIZE, Speed
 
 
 class Snake:
-    _speed: int = Speed.normal.value
+    _speed: int = Speed.slow.value
     alive: bool = True
 
-    def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None, turns: Collection[Node] = None):
+    def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None):
         self._nodes = list(nodes) if nodes else [Node(100, i, Direction.up) for i in range(100, 130, NODE_SIZE)]
         self._window_size = w_size
 
@@ -53,18 +53,17 @@ class Snake:
         for node in self.nodes:
             if node.has_turns():
                 next_turn = node.next_turn
-
                 if node.x == next_turn.x and node.y == next_turn.y:
                     node.turn()
             direction = node.direction.value
             if direction == 'UP':
-                node.y -= self.speed
+                node.y -= NODE_SIZE
             elif direction == 'DOWN':
-                node.y += self.speed
+                node.y += NODE_SIZE
             elif direction == 'LEFT':
-                node.x -= self.speed
+                node.x -= NODE_SIZE
             elif direction == 'RIGHT':
-                node.x += self.speed
+                node.x += NODE_SIZE
 
         if self.check_collision():
             self.alive = False
@@ -73,13 +72,13 @@ class Snake:
         new_node = copy.deepcopy(self.tail)
         direction = self.tail.direction.value
         if direction == 'UP':
-            new_node.y += self.speed
+            new_node.y += NODE_SIZE
         elif direction == 'DOWN':
-            new_node.y -= self.speed
+            new_node.y -= NODE_SIZE
         elif direction == 'LEFT':
-            new_node.x += self.speed
+            new_node.x += NODE_SIZE
         elif direction == 'RIGHT':
-            new_node.x -= self.speed
+            new_node.x -= NODE_SIZE
         self._nodes.append(new_node)
 
     def check_collision(self) -> bool:
@@ -92,4 +91,16 @@ class Snake:
         return False
 
     def check_food_collision(self, food_x: int, food_y: int) -> bool:
-        return abs(self.head.x - food_x) <= NODE_SIZE and abs(self.head.y - food_y) <= NODE_SIZE
+        snake_x = self.head.x
+        snake_y = self.head.y
+        direction = self.head.direction.value
+
+        if direction == 'UP':
+            snake_y -= NODE_SIZE
+        elif direction == 'DOWN':
+            snake_y += NODE_SIZE
+        elif direction == 'LEFT':
+            snake_x -= NODE_SIZE
+        elif direction == 'RIGHT':
+            snake_x -= NODE_SIZE
+        return snake_x == food_x and snake_y == food_y

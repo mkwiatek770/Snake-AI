@@ -11,7 +11,7 @@ class Direction(Enum):
 
 
 class Speed(Enum):
-    debug = int(NODE_SIZE * 0.1)
-    slow = int(NODE_SIZE * 0.2)
-    normal = int(NODE_SIZE * 0.5)
-    fast = int(NODE_SIZE * 1)
+    debug = 1
+    slow = 2
+    normal = 3
+    fast = 4

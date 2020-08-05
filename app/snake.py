@@ -50,7 +50,25 @@ class Snake:
             node.add_turn(turn)
 
     def move(self):
-        for node in self.nodes:
+        # move head
+        new_x = self.head.x
+        new_y = self.head.y
+        direction = self.head.direction.value
+        if direction == 'UP':
+            new_y -= NODE_SIZE
+        elif direction == 'DOWN':
+            new_y += NODE_SIZE
+        elif direction == 'LEFT':
+            new_x -= NODE_SIZE
+        elif direction == 'RIGHT':
+            new_x += NODE_SIZE
+        if self.check_collision(new_x, new_y):
+            self.alive = False
+            return
+        self.head.x = new_x
+        self.head.y = new_y
+        # move tail
+        for node in self.nodes[1:]:
             if node.has_turns():
                 next_turn = node.next_turn
                 if node.x == next_turn.x and node.y == next_turn.y:
@@ -65,9 +83,6 @@ class Snake:
             elif direction == 'RIGHT':
                 node.x += NODE_SIZE
 
-        if self.check_collision():
-            self.alive = False
-
     def eat(self) -> None:
         new_node = copy.deepcopy(self.tail)
         direction = self.tail.direction.value
@@ -81,9 +96,16 @@ class Snake:
             new_node.x -= NODE_SIZE
         self._nodes.append(new_node)
 
-    def check_collision(self) -> bool:
-        x, y = self.head.x, self.head.y
-        if x <= 0 or x >= self._window_size[0] - NODE_SIZE or y <= 0 or y >= self._window_size[1] - NODE_SIZE:
+    def check_collision(self, x: int, y: int) -> bool:
+        direction = self.head.direction.value
+
+        if x == -NODE_SIZE and direction == 'LEFT':
+            return True
+        elif x == self._window_size[0] and direction == 'RIGHT':
+            return True
+        elif y == -NODE_SIZE and direction == 'UP':
+            return True
+        elif y == self._window_size[1] and direction == 'DOWN':
             return True
         for node in self.nodes[1:]:
             if x == node.x and y == node.y:

@@ -1,6 +1,9 @@
 from __future__ import annotations
+
 import copy
+import random
 from typing import Collection, Tuple
+
 from app.node import Node
 from app.utils import Direction, NODE_SIZE, Speed
 
@@ -12,6 +15,13 @@ class Snake:
     def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None):
         self._nodes = list(nodes) if nodes else [Node(100, i, Direction.up) for i in range(100, 130, NODE_SIZE)]
         self._window_size = w_size
+        self.points = 0
+        # 24 input neurons
+        # 8 angles (0, 45, 90, 135, 180, 225, 270, 315)
+        # 3 distance meassurements for current angle (to_food, to_wall, to_its_body) normalized to values [0, 1]
+        # order is in following way [angle 0 to_food, angle 0 to_wall, ang 0 to_its_body, ang 45 to_food, ....]
+        # angle 0 means straight (from head perspective)
+        self.chromosome = [random.uniform(0, 1) for _ in range(24)]
 
     @property
     def head(self) -> Node:
@@ -126,3 +136,8 @@ class Snake:
         elif direction == 'RIGHT':
             snake_x -= NODE_SIZE
         return snake_x == food_x and snake_y == food_y
+
+    def fitness(self):
+        #  Desired fitness will be something like:
+        #  F = 20*points + 5*health
+        return 20 * self.points

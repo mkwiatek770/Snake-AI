@@ -7,7 +7,7 @@ from app.snake import Snake
 from app.food import Food
 from app.utils import NODE_SIZE, Direction
 
-FPS = 15
+FPS = 20
 AREA_WIDTH = 640
 SIDEBAR_WIDTH = 300
 HEIGHT = 400
@@ -22,7 +22,6 @@ class App:
         self.snake = Snake((AREA_WIDTH, HEIGHT))
         self.food = Food(AREA_WIDTH // 2, HEIGHT // 2)
         self.fps_clock = pygame.time.Clock()
-        self.points = 0
 
     def run(self) -> None:
         self.on_init()
@@ -59,7 +58,7 @@ class App:
         self.snake.move()
         if self.snake.check_food_collision(self.food.x, self.food.y):
             self._new_food()
-            self._add_points()
+            self.snake.points += 1
             self.snake.eat()
 
     def on_render(self) -> None:
@@ -81,7 +80,7 @@ class App:
 
     def _draw_sidebar_info(self):
         pygame.draw.line(self._display_surf, (255, 255, 255), (AREA_WIDTH, 0), (AREA_WIDTH, HEIGHT))
-        text_surface = self.font.render(f'Score: {self.points}', True, (255, 0, 0))
+        text_surface = self.font.render(f'Score: {self.snake.points}', True, (255, 0, 0))
         self._display_surf.blit(text_surface, dest=(AREA_WIDTH + 40, 40))
 
     def _new_food(self) -> None:
@@ -95,9 +94,6 @@ class App:
             else:
                 snake_intersection = False
         self.food = Food(new_x, new_y)
-
-    def _add_points(self) -> None:
-        self.points += 1
 
 
 if __name__ == "__main__":

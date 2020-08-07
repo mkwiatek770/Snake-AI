@@ -6,6 +6,7 @@ from typing import Collection, List
 
 from app.node import Node
 from app.utils import Direction, NODE_SIZE, Speed
+from app.game_simulation import perform_simulation
 from app.constants import WINDOW_SIZE, PLAYS_PER_SNAKE
 
 
@@ -45,7 +46,10 @@ class Snake:
         return self.alive
 
     def play(self) -> None:
-        raise NotImplementedError
+        total_score = 0
+        for _ in PLAYS_PER_SNAKE:
+            total_score += perform_simulation(self)
+        self.fitness = round(total_score / PLAYS_PER_SNAKE, 2)
 
     def turn_head(self, direction: Direction):
         if direction == self.head.direction:

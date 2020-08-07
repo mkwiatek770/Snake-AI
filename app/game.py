@@ -19,7 +19,7 @@ class App:
         self._running = True
         self._display_surf = None
         self._image_surf = None
-        self.snake = Snake((AREA_WIDTH, HEIGHT))
+        self.snake = Snake()
         self.food = Food(AREA_WIDTH // 2, HEIGHT // 2)
         self.fps_clock = pygame.time.Clock()
 

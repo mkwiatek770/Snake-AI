@@ -2,26 +2,27 @@ from __future__ import annotations
 
 import copy
 import random
-from typing import Collection, Tuple
+from typing import Collection, List
 
 from app.node import Node
 from app.utils import Direction, NODE_SIZE, Speed
+from app.constants import WINDOW_SIZE, PLAYS_PER_SNAKE
 
 
 class Snake:
     _speed: int = Speed.slow.value
     alive: bool = True
 
-    def __init__(self, w_size: Tuple[int, int], nodes: Collection[Node] = None):
+    def __init__(self, nodes: Collection[Node] = None, chromosome: List[float] = None):
         self._nodes = list(nodes) if nodes else [Node(100, i, Direction.up) for i in range(100, 130, NODE_SIZE)]
-        self._window_size = w_size
         self.points = 0
         # 24 input neurons
         # 8 angles (0, 45, 90, 135, 180, 225, 270, 315)
         # 3 distance meassurements for current angle (to_food, to_wall, to_its_body) normalized to values [0, 1]
         # order is in following way [angle 0 to_food, angle 0 to_wall, ang 0 to_its_body, ang 45 to_food, ....]
         # angle 0 means straight (from head perspective)
-        self.chromosome = [random.uniform(0, 1) for _ in range(24)]
+        self.chromosome = list(chromosome) if chromosome else [round(random.uniform(0, 1), 2) for _ in range(24)]
+        self.fitness = 0
 
     @property
     def head(self) -> Node:
@@ -42,6 +43,9 @@ class Snake:
     @property
     def is_alive(self) -> bool:
         return self.alive
+
+    def play(self) -> None:
+        raise NotImplementedError
 
     def turn_head(self, direction: Direction):
         if direction == self.head.direction:
@@ -111,11 +115,11 @@ class Snake:
 
         if x == -NODE_SIZE and direction == 'LEFT':
             return True
-        elif x == self._window_size[0] and direction == 'RIGHT':
+        elif x == WINDOW_SIZE[0] and direction == 'RIGHT':
             return True
         elif y == -NODE_SIZE and direction == 'UP':
             return True
-        elif y == self._window_size[1] and direction == 'DOWN':
+        elif y == WINDOW_SIZE[1] and direction == 'DOWN':
             return True
         for node in self.nodes[1:]:
             if x == node.x and y == node.y:

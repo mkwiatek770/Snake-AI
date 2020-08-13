@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import copy
 import random
-from typing import Collection, List
+from typing import List
 
 from app.v2.node import Node
 from app.v2.constants import GRID_SIZE, Direction
@@ -32,7 +32,7 @@ class Snake:
         return self._nodes[-1]
 
     @property
-    def nodes(self) -> Collection[Node]:
+    def nodes(self) -> List[Node]:
         return self._nodes
 
     @property
@@ -44,7 +44,7 @@ class Snake:
         return self._food
 
     def play(self) -> None:
-        score = 0
+        score = 1
         while self.is_alive:
             next_direction = self.next_direction()
             if next_direction != self.head.direction:

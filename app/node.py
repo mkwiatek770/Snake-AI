@@ -1,13 +1,14 @@
 from __future__ import annotations
-from typing import Collection
+from typing import Collection, Optional
 from app.utils import Direction
 
 
 class Node:
-    def __init__(self, x: int, y: int, direction: Direction):
+    def __init__(self, x: int, y: int, direction: Optional[Direction] = None) -> None:
         self.x = x
         self.y = y
-        self.direction = direction
+        if direction:
+            self.direction = direction
         self._turns = []
 
     @property

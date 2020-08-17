@@ -117,7 +117,9 @@ class Game:
             pygame.draw.rect(self.screen, WHITE, (x, y, NODE_SIZE, NODE_SIZE))
 
     def _draw_food(self, food: Node) -> None:
-        pygame.draw.rect(self.screen, RED, (food.x, food.y, NODE_SIZE, NODE_SIZE))
+        x = food.x * GRID_SIZE
+        y = food.y * GRID_SIZE
+        pygame.draw.rect(self.screen, RED, (x, y, NODE_SIZE, NODE_SIZE))
 
 
 if __name__ == '__main__':

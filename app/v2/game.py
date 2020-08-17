@@ -92,6 +92,7 @@ class Game:
                 self.screen.fill(BLACK)
                 self._draw_snake(snake.nodes)
                 self._draw_food(snake.food)
+                pygame.display.update()
                 next_dir = snake.next_direction()
                 if next_dir != snake.head.direction:
                     snake.turn_head(next_dir)

@@ -11,7 +11,7 @@ from app.v2.constants import GRID_SIZE, Direction
 class Snake:
     def __init__(self, chromosome: List[float] = None, display_mode: bool = False) -> None:
         self.alive = True
-        self._nodes = [Node(GRID_SIZE // 2 - offset, GRID_SIZE // 2, Direction.LEFT) for offset in range(1, 4)]
+        self._nodes = [Node(GRID_SIZE // 2 - offset, GRID_SIZE // 2, Direction.RIGHT) for offset in range(1, 4)]
         self.points = 0
         self.display_mode = display_mode
         # 24 input neurons
@@ -110,7 +110,8 @@ class Snake:
                 node.x += 1
 
         # calculate move score
-        move_score = ...
+        move_score = 0.01
+        print("Move snake")
         return move_score
 
     def eat(self) -> None:

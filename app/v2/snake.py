@@ -4,8 +4,8 @@ import copy
 import random
 from typing import List
 
-from app.v2.node import Node
-from app.v2.constants import GRID_SIZE, Direction
+from app.v2.constants import GRID_SIZE, Direction, Node
+from app.v2.utils import angle_with_apple
 
 
 class Snake:
@@ -53,9 +53,14 @@ class Snake:
             if self.check_food_collision():
                 score += 1
                 self._food = self._new_food()
+        # fitness to będzie suma punktów + jak długo wąż został przy życiu (oczywiscie punkty są wazniejsze)
         self.fitness = round(score, 3)
 
     def next_direction(self) -> Direction:
+        # main brain logic will be here
+        # check if it's safe to go right, left, forward
+        # calculate angle with apple
+        # maybe also directions from head to apple, to itself, to wall
         return random.choice([Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.LEFT])
 
     def turn_head(self, direction: Direction):

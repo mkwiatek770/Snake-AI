@@ -5,14 +5,14 @@ import pygame.font
 
 from app.v2.snake import Snake
 from app.v2.population import Population
-from app.v2.node import Node
-from app.v2.constants import FPS, GRID_SIZE, NODE_SIZE
-
+from app.v2.constants import FPS, GRID_SIZE, NODE_SIZE, Node
+from app.v2.utils import angle_with_apple
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+
 
 class Game:
     def __init__(self):
@@ -89,6 +89,7 @@ class Game:
             print("Here snake simulation will be shown with possibility to restart")
             snake = Snake(chromosome=chromosome)
             while snake.is_alive:
+                # draw grid with snake and food
                 self.screen.fill(BLACK)
                 self._draw_snake(snake.nodes)
                 self._draw_food(snake.food)
@@ -97,9 +98,9 @@ class Game:
                 if next_dir != snake.head.direction:
                     snake.turn_head(next_dir)
                 snake.move()
-                # draw grid with snake and food
+                print(f"Head: ({snake.head.x}, {snake.head.y}) Food: ({snake.food.x}, {snake.food.y})")
+                print(angle_with_apple([[snake.head.x, snake.head.y], [snake.nodes[1].x, snake.nodes[1].y]], [snake.food.x, snake.food.y]))
                 self.fps_clock.tick(FPS)
-
 
     def on_loop(self):
         pass

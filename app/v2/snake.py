@@ -21,7 +21,7 @@ class Snake:
         # angle 0 means straight (from head perspective)
         self.chromosome = list(chromosome) if chromosome else [round(random.uniform(0, 1), 2) for _ in range(24)]
         self.fitness = 0
-        self._food = Node(GRID_SIZE // 2 + 2, GRID_SIZE // 2 + 2)
+        self._food = Node(GRID_SIZE // 2 + 2, GRID_SIZE // 2)
 
     @property
     def head(self) -> Node:
@@ -53,7 +53,7 @@ class Snake:
             if self.check_food_collision():
                 score += 1
                 self._food = self._new_food()
-        self.fitness = score
+        self.fitness = round(score, 3)
 
     def next_direction(self) -> Direction:
         return random.choice([Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.LEFT])
@@ -75,6 +75,7 @@ class Snake:
             node.add_turn(turn)
 
     def move(self) -> float:
+        move_score = 0.01
         # move head
         new_x = self.head.x
         new_y = self.head.y
@@ -109,9 +110,10 @@ class Snake:
             elif direction == 'RIGHT':
                 node.x += 1
 
+        if self.check_food_collision():
+            move_score += 1
+            self._food = self._new_food()
         # calculate move score
-        move_score = 0.01
-        print("Move snake")
         return move_score
 
     def eat(self) -> None:

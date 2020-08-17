@@ -56,7 +56,7 @@ class Snake:
         self.fitness = score
 
     def next_direction(self) -> Direction:
-        return Direction.RIGHT
+        return random.choice([Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.LEFT])
 
     def turn_head(self, direction: Direction):
         if direction == self.head.direction:

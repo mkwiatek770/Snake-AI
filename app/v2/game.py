@@ -34,23 +34,24 @@ class Game:
             print(f'End of generation {generation}:')
             print(f'Best fitness: {population.best_fitness}\n')
             # Here will be stop where the best snake game playing will be shown till clicking button 'Next generation'
-            self.on_end_generation(generation, population.best_fitness, population.best_agent.chromosome)
+            self.on_end_generation(generation, population.best_agent)
             population.crossover()
 
-    def display_best_snake(self, chromosome: List[float]):
-        print("Display best snake chromosome: ", chromosome)
-        snake = Snake(chromosome=chromosome, display_mode=True)
-        while snake.is_alive:
-            self.on_loop()
-            self.on_render()
-            self.fps_clock.tick(FPS)
-        print("Snake is dead")
-        self.on_cleanup()
+    # def display_best_snake(self, chromosome: List[float]):
+    #     print("Display best snake chromosome: ", chromosome)
+    #     snake = Snake(chromosome=chromosome, display_mode=True)
+    #     while snake.is_alive:
+    #         self.on_loop()
+    #         self.on_render()
+    #         self.fps_clock.tick(FPS)
+    #     print("Snake is dead")
+    #     self.on_cleanup()
 
     def on_init(self):
         pygame.init()
         total_size = (NODE_SIZE * GRID_SIZE, NODE_SIZE * GRID_SIZE)
         self.screen = pygame.display.set_mode(total_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        pygame.display.set_caption('Snake AI - Michał Kwiatek')
         self._font = pygame.font.Font(pygame.font.get_default_font(), 24)
         self.running = True
 
@@ -58,7 +59,7 @@ class Game:
         if event.type == pygame.QUIT:
             self.running = False
 
-    def on_end_generation(self, generation_number: int, fitness: float, chromosome: List[float]) -> None:
+    def on_end_generation(self, generation_number: int, snake: Snake) -> None:
 
         continue_button_clicked = False
         snake_simulation = False
@@ -79,15 +80,15 @@ class Game:
             # Display summary info and buttons
             self.screen.fill(BLACK)
             self.screen.blit(self._font.render(f'Generation: {generation_number}', True, RED), (20, 20))
-            self.screen.blit(self._font.render(f'Best Fitness: {fitness}', True, RED), (20, 50))
+            self.screen.blit(self._font.render(f'Best Fitness: {snake.fitness}', True, RED), (20, 50))
             self.screen.blit(self._font.render(f'Show simulation?', True, WHITE), (20, 160))
             pygame.draw.rect(self.screen, GREEN, (20, 200, 50, 50))
             pygame.draw.rect(self.screen, RED, (160, 200, 50, 50))
             pygame.display.update()
 
         if snake_simulation:
-            print("Here snake simulation will be shown with possibility to restart")
-            snake = Snake(chromosome=chromosome)
+            print('Start simulation')
+            snake = Snake(weights=snake.weights, biases=snake.biases)
             while snake.is_alive:
                 # draw grid with snake and food
                 self.screen.fill(BLACK)
@@ -98,7 +99,7 @@ class Game:
                 if next_dir != snake.head.direction:
                     snake.turn_head(next_dir)
                 snake.move()
-                print(f"Head: ({snake.head.x}, {snake.head.y}) Food: ({snake.food.x}, {snake.food.y})")
+                print(f'Head: ({snake.head.x}, {snake.head.y}) Food: ({snake.food.x}, {snake.food.y})')
                 print(angle_with_apple([[snake.head.x, snake.head.y], [snake.nodes[1].x, snake.nodes[1].y]], [snake.food.x, snake.food.y]))
                 self.fps_clock.tick(FPS)
 

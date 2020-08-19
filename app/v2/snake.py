@@ -4,24 +4,33 @@ import copy
 import random
 from typing import List
 
+import numpy as np
+
 from app.v2.constants import GRID_SIZE, Direction, Node
 from app.v2.utils import angle_with_apple
+from app.v2.neural_net import NeuralNet
 
 
 class Snake:
-    def __init__(self, chromosome: List[float] = None, display_mode: bool = False) -> None:
+    def __init__(self, weights: list = None, biases: list = None) -> None:
         self.alive = True
         self._nodes = [Node(GRID_SIZE // 2 - offset, GRID_SIZE // 2, Direction.RIGHT) for offset in range(1, 4)]
         self.points = 0
-        self.display_mode = display_mode
+
+        self.vision = []
+
+        self.weights = weights if weights else [random.randint(0, 1) for _ in range(6)]
+        self.biases = biases if biases else []
+        self.neural_net = NeuralNet(weights, biases)
         # 24 input neurons
         # 8 angles (0, 45, 90, 135, 180, 225, 270, 315)
         # 3 distance measurements for current angle (to_food, to_wall, to_its_body) normalized to values [0, 1]
         # order is in following way [angle 0 to_food, angle 0 to_wall, ang 0 to_its_body, ang 45 to_food, ....]
         # angle 0 means straight (from head perspective)
-        self.chromosome = list(chromosome) if chromosome else [round(random.uniform(0, 1), 2) for _ in range(24)]
         self.fitness = 0
         self._food = Node(GRID_SIZE // 2 + 2, GRID_SIZE // 2)
+        self.age = 1
+        self.hunger_level = 0
 
     @property
     def head(self) -> Node:
@@ -50,18 +59,32 @@ class Snake:
             if next_direction != self.head.direction:
                 self.turn_head(next_direction)
             score += self.move()
-            if self.check_food_collision():
-                score += 1
-                self._food = self._new_food()
         # fitness to będzie suma punktów + jak długo wąż został przy życiu (oczywiscie punkty są wazniejsze)
-        self.fitness = round(score, 3)
+        self.fitness = round(20*score + self.age, 3)
 
     def next_direction(self) -> Direction:
         # main brain logic will be here
         # check if it's safe to go right, left, forward
         # calculate angle with apple
         # maybe also directions from head to apple, to itself, to wall
+
+        # update vision parameter
+        self.scan()
+        decision = np.argmax(self.neural_net.feed_forward(self.vision))
+        # możliwe, że zamiast tego decision to będzie tylko {1 2 3} gdzie 1 oznacza turn_right, 2 turn_left a 3 forward
+        if decision == 1:
+            return Direction.RIGHT
+        elif decision == 2:
+            return Direction.LEFT
+        elif decision == 3:
+            return Direction.UP
+        elif decision == 4:
+            return Direction.DOWN
+
         return random.choice([Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.LEFT])
+
+    def scan(self) -> None:
+        pass
 
     def turn_head(self, direction: Direction):
         if direction == self.head.direction:
@@ -118,6 +141,11 @@ class Snake:
         if self.check_food_collision():
             move_score += 1
             self._food = self._new_food()
+        else:
+            self.hunger_level -= 1
+            if self.hunger_level == 0:
+                self.alive = False
+        self.age += 1
         # calculate move score
         return move_score
 

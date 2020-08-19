@@ -35,13 +35,11 @@ class Population:
             pool_of_agents.extend([agent] * round((agent.fitness / total_fitness) * 100))
         # One-point roulette wheel selection
         for _ in range(self.size):
-            father = random.choice(pool_of_agents)
-            mother = random.choice(pool_of_agents)
-            random_chunk_index = random.randint(0, len(father.chromosome) - 1)
-            child_chromosome = father.chromosome[:random_chunk_index] + mother.chromosome[random_chunk_index:]
+            parent = random.choice(pool_of_agents)
+            chromosome = parent.weights
             # conduct mutation
-            self.mutation(child_chromosome)
-            child = Snake(chromosome=child_chromosome)
+            self.mutation(chromosome)
+            child = Snake(weights=chromosome, biases=parent.biases)
             new_agents.append(child)
         # replace current offspring with new one
         self.agents = new_agents

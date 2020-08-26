@@ -6,7 +6,6 @@ import pygame.font
 from app.v2.snake import Snake
 from app.v2.population import Population
 from app.v2.constants import FPS, GRID_SIZE, NODE_SIZE, Node
-from app.v2.utils import angle_with_apple
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -18,8 +17,7 @@ class Game:
     def __init__(self):
         self.running = True
         self.screen = None
-        self._image_surface = None
-        self._font = None
+        self.font = None
         self.fps_clock = pygame.time.Clock()
 
     def run(self, population_size: int, generations: int):
@@ -52,12 +50,8 @@ class Game:
         total_size = (NODE_SIZE * GRID_SIZE, NODE_SIZE * GRID_SIZE)
         self.screen = pygame.display.set_mode(total_size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         pygame.display.set_caption('Snake AI - Michał Kwiatek')
-        self._font = pygame.font.Font(pygame.font.get_default_font(), 24)
+        self.font = pygame.font.Font(pygame.font.get_default_font(), 24)
         self.running = True
-
-    def on_event(self, event) -> None:
-        if event.type == pygame.QUIT:
-            self.running = False
 
     def on_end_generation(self, generation_number: int, snake: Snake) -> None:
 
@@ -79,9 +73,9 @@ class Game:
                         continue_button_clicked = True
             # Display summary info and buttons
             self.screen.fill(BLACK)
-            self.screen.blit(self._font.render(f'Generation: {generation_number}', True, RED), (20, 20))
-            self.screen.blit(self._font.render(f'Best Fitness: {snake.fitness}', True, RED), (20, 50))
-            self.screen.blit(self._font.render(f'Show simulation?', True, WHITE), (20, 160))
+            self.screen.blit(self.font.render(f'Generation: {generation_number}', True, RED), (20, 20))
+            self.screen.blit(self.font.render(f'Best Fitness: {snake.fitness}', True, RED), (20, 50))
+            self.screen.blit(self.font.render(f'Show simulation?', True, WHITE), (20, 160))
             pygame.draw.rect(self.screen, GREEN, (20, 200, 50, 50))
             pygame.draw.rect(self.screen, RED, (160, 200, 50, 50))
             pygame.display.update()
@@ -100,7 +94,6 @@ class Game:
                     snake.turn_head(next_dir)
                 snake.move()
                 print(f'Head: ({snake.head.x}, {snake.head.y}) Food: ({snake.food.x}, {snake.food.y})')
-                print(angle_with_apple([[snake.head.x, snake.head.y], [snake.nodes[1].x, snake.nodes[1].y]], [snake.food.x, snake.food.y]))
                 self.fps_clock.tick(FPS)
 
     def on_loop(self):

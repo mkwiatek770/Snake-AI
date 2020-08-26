@@ -1,9 +1,18 @@
 import math
+from typing import List
+
 import numpy as np
 from app.v2.constants import Direction, Node, GRID_SIZE
 
+_DIRECTION_TO_VALUE_MAP = {
+    Direction.LEFT: 0,
+    Direction.UP: 1,
+    Direction.RIGHT: 2,
+    Direction.DOWN: 3,
+}
 
-def angle_with_apple(snake_position, apple_position):
+
+def angle_with_apple(snake_nodes: List[Node], apple: Node):
     """
     -1: 180 degrees
     -0.5 90 degrees right
@@ -15,8 +24,8 @@ RIGHT -> button_direction = 1
 DOWN ->button_direction = 2
 UP -> button_direction = 3
     """
-    apple_direction_vector = np.array(apple_position) - np.array(snake_position[0])
-    snake_direction_vector = np.array(snake_position[0]) - np.array(snake_position[1])
+    apple_direction_vector = np.array([apple.x, apple.y]) - np.array([snake_nodes[0].x, snake_nodes[0].y])
+    snake_direction_vector = np.array([snake_nodes[0].x, snake_nodes[0].y]) - np.array([snake_nodes[1].x, snake_nodes[1].y])
 
     norm_of_apple_direction_vector = np.linalg.norm(apple_direction_vector)
     norm_of_snake_direction_vector = np.linalg.norm(snake_direction_vector)
@@ -32,7 +41,7 @@ UP -> button_direction = 3
             0] * snake_direction_vector_normalized[1],
         apple_direction_vector_normalized[1] * snake_direction_vector_normalized[1] + apple_direction_vector_normalized[
             0] * snake_direction_vector_normalized[0]) / math.pi
-    return angle, snake_direction_vector, apple_direction_vector_normalized, snake_direction_vector_normalized
+    return angle
 
 
 def is_direction_blocked(snake, direction: Direction) -> bool:
@@ -58,6 +67,22 @@ def is_direction_blocked(snake, direction: Direction) -> bool:
         if node.x == next_x and node.y == next_y:
             return True
     return False
+
+
+def right_direction_from_snake_perspective(snake_direction: Direction) -> Direction:
+    current_dir = _DIRECTION_TO_VALUE_MAP[snake_direction]
+    right_dir_value = (current_dir + 1) % 4
+    for direction, value in _DIRECTION_TO_VALUE_MAP.items():
+        if value == right_dir_value:
+            return direction
+
+
+def left_direction_from_snake_perspective(snake_direction: Direction) -> Direction:
+    current_dir = _DIRECTION_TO_VALUE_MAP[snake_direction]
+    right_dir_value = (current_dir + 3) % 4
+    for direction, value in _DIRECTION_TO_VALUE_MAP.items():
+        if value == right_dir_value:
+            return direction
 
 
 def euclidean_distance(first_node: Node, second_node: Node) -> float:

@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import copy
 import random
-from typing import List
+from typing import List, Union
 
 import numpy as np
 
 from app.v2.constants import GRID_SIZE, Direction, Node
-from app.v2.utils import angle_with_apple
 from app.v2.neural_net import NeuralNet
+from app.v2.utils import (
+    is_direction_blocked, left_direction_from_snake_perspective, right_direction_from_snake_perspective,
+    angle_with_apple, euclidean_distance,
+)
 
 
 class Snake:
@@ -20,8 +23,8 @@ class Snake:
         self.vision = []
 
         self.weights = weights if weights else [random.randint(0, 1) for _ in range(6)]
-        self.biases = biases if biases else []
-        self.neural_net = NeuralNet(weights, biases)
+        self.biases = biases if biases else [random.randint(0, 1) for _ in range(6)]
+        self.neural_net = NeuralNet(self.weights, self.biases)
         # 24 input neurons
         # 8 angles (0, 45, 90, 135, 180, 225, 270, 315)
         # 3 distance measurements for current angle (to_food, to_wall, to_its_body) normalized to values [0, 1]
@@ -69,8 +72,8 @@ class Snake:
         # maybe also directions from head to apple, to itself, to wall
 
         # update vision parameter
-        self.scan()
-        decision = np.argmax(self.neural_net.feed_forward(self.vision))
+        vision = self.scan()
+        decision = np.argmax(self.neural_net.feed_forward(vision))
         # możliwe, że zamiast tego decision to będzie tylko {1 2 3} gdzie 1 oznacza turn_right, 2 turn_left a 3 forward
         if decision == 1:
             return Direction.RIGHT
@@ -83,8 +86,36 @@ class Snake:
 
         return random.choice([Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.LEFT])
 
-    def scan(self) -> None:
-        pass
+    def scan(self) -> List[Union[int, float]]:
+        """
+        Return list vector with values
+
+        is left safe
+        if right safe
+        is forward safe
+        angle with apple
+        distance to apple
+        distance to wall
+        """
+        vision: List[Union[int, float]] = [0] * 6
+        # is left safe?
+        vision[0] = is_direction_blocked(self, left_direction_from_snake_perspective(self.head.direction))
+        # is right safe?
+        vision[1] = is_direction_blocked(self, right_direction_from_snake_perspective(self.head.direction))
+        # is forward safe?
+        vision[2] = is_direction_blocked(self, self.head.direction)
+        # angle with apple
+        vision[3] = angle_with_apple(self.nodes, self.food)
+        # distance to apple
+        vision[4] = euclidean_distance(self.head, self.food)
+        # distance to wall
+        up_distance = euclidean_distance(self.head, Node(self.head.x, 0))
+        down_distance = euclidean_distance(self.head, Node(self.head.x, GRID_SIZE - 1))
+        left_distance = euclidean_distance(self.head, Node(0, self.head.y))
+        right_distance = euclidean_distance(self.head, Node(GRID_SIZE - 1, self.head.y))
+        vision[5] = min([up_distance, down_distance, left_distance, right_distance])
+
+        return vision
 
     def turn_head(self, direction: Direction):
         if direction == self.head.direction:

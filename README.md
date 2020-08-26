@@ -25,3 +25,5 @@ All logic is inside `app` package. `test` directory is responsible for asserting
 - `python app/game.py` - start game
 - `pytest tests/` - run tests
 - `mkdocs serve` - open documentation server
+
+Instead of backpropaggation I'm using genetic algorithms

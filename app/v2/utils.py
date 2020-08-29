@@ -100,3 +100,15 @@ def sigmoid(z):
     z is weighted sum of input from preactivation step
     """
     return 1 / (1 + np.exp(-z))
+
+
+def normalize(data: List[float]) -> List[float]:
+    """
+    Normalize data using min-max scaler
+    """
+    normalized_data = []
+    x_min, x_max = min(data), max(data)
+    for x in data:
+        normalized_value = (x - x_min) / (x_max - x_min)
+        normalized_data.append(normalized_value)
+    return normalized_data

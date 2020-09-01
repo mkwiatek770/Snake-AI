@@ -32,7 +32,8 @@ class Game:
             print(f'End of generation {generation}:')
             print(f'Best fitness: {population.best_fitness}\n')
             # Here will be stop where the best snake game playing will be shown till clicking button 'Next generation'
-            self.on_end_generation(generation, population.best_agent)
+            if generation == 1 or generation == 99:
+                self.on_end_generation(generation, population.best_agent)
             population.crossover()
 
     # def display_best_snake(self, chromosome: List[float]):
@@ -82,7 +83,7 @@ class Game:
 
         if snake_simulation:
             print('Start simulation')
-            snake = Snake(weights=snake.weights, biases=snake.biases)
+            snake = Snake(snake.neural_net)
             while snake.is_alive:
                 # draw grid with snake and food
                 self.screen.fill(BLACK)
@@ -93,7 +94,6 @@ class Game:
                 if next_dir != snake.head.direction:
                     snake.turn_head(next_dir)
                 snake.move()
-                print(f'Head: ({snake.head.x}, {snake.head.y}) Food: ({snake.food.x}, {snake.food.y})')
                 self.fps_clock.tick(FPS)
 
     def on_loop(self):
@@ -119,4 +119,4 @@ class Game:
 
 if __name__ == '__main__':
     app = Game()
-    app.run(population_size=1, generations=3)
+    app.run(population_size=10, generations=100)

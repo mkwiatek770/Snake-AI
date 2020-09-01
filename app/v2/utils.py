@@ -109,6 +109,9 @@ def normalize(data: List[float]) -> List[float]:
     normalized_data = []
     x_min, x_max = min(data), max(data)
     for x in data:
-        normalized_value = (x - x_min) / (x_max - x_min)
+        try:
+            normalized_value = (x - x_min) / (x_max - x_min)
+        except ZeroDivisionError:
+            normalized_value = 0
         normalized_data.append(normalized_value)
     return normalized_data

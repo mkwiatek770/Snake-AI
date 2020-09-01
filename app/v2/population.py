@@ -1,6 +1,7 @@
 import random
 from typing import List
 
+from app.v2.neural_net import NeuralNet
 from app.v2.snake import Snake
 from app.v2.constants import BIT_ERROR_RATE
 
@@ -36,16 +37,17 @@ class Population:
         # One-point roulette wheel selection
         for _ in range(self.size):
             parent = random.choice(pool_of_agents)
-            chromosome = parent.weights
+            chromosome = parent.neural_net
             # conduct mutation
-            self.mutation(chromosome)
-            child = Snake(weights=chromosome, biases=parent.biases)
+            # self.mutation(chromosome)
+            child = Snake(chromosome)
             new_agents.append(child)
         # replace current offspring with new one
         self.agents = new_agents
 
     @staticmethod
-    def mutation(chromosome: List[float]) -> None:
+    def mutation(chromosome: NeuralNet) -> None:
+        # muszę przeprowadzić lekką mutacje macierzy wag i biasów żeby przyszłe pokolenia były lepsze od poprzednich
         for i in range(len(chromosome)):
             if random.random() < BIT_ERROR_RATE:
                 chromosome[i] = round(random.uniform(0, 1), 2)

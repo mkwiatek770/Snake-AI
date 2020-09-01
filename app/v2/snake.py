@@ -15,16 +15,14 @@ from app.v2.utils import (
 
 
 class Snake:
-    def __init__(self, weights: list = None, biases: list = None) -> None:
+    def __init__(self, neural_net: NeuralNet = None) -> None:
         self.alive = True
         self._nodes = [Node(GRID_SIZE // 2 - offset, GRID_SIZE // 2, Direction.RIGHT) for offset in range(1, 4)]
         self.points = 0
 
         self.vision = []
 
-        self.weights = weights if weights else [random.randint(0, 1) for _ in range(6)]
-        self.biases = biases if biases else [random.randint(0, 1) for _ in range(6)]
-        self.neural_net = NeuralNet(self.weights, self.biases)
+        self.neural_net = neural_net if neural_net else NeuralNet()
         # 24 input neurons
         # 8 angles (0, 45, 90, 135, 180, 225, 270, 315)
         # 3 distance measurements for current angle (to_food, to_wall, to_its_body) normalized to values [0, 1]
@@ -63,7 +61,7 @@ class Snake:
                 self.turn_head(next_direction)
             score += self.move()
         # fitness to będzie suma punktów + jak długo wąż został przy życiu (oczywiscie punkty są wazniejsze)
-        self.fitness = round(20*score + self.age, 3)
+        self.fitness = round(10*score + self.age, 3)
 
     def next_direction(self) -> Direction:
         # main brain logic will be here
@@ -73,16 +71,16 @@ class Snake:
 
         # update vision parameter
         vision = self.scan()
-        decision = np.argmax(self.neural_net.feed_forward(vision))
+        decision = self.neural_net.feed_forward(vision)
         # możliwe, że zamiast tego decision to będzie tylko {1 2 3} gdzie 1 oznacza turn_right, 2 turn_left a 3 forward
-        if decision == 1:
-            return Direction.RIGHT
-        elif decision == 2:
-            return Direction.LEFT
-        elif decision == 3:
+        if decision <= 0.25:
             return Direction.UP
-        elif decision == 4:
+        elif decision <= 0.5:
+            return Direction.RIGHT
+        elif decision <= 0.75:
             return Direction.DOWN
+        elif decision <= 1:
+            return Direction.LEFT
 
         return random.choice([Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.LEFT])
 
@@ -127,7 +125,6 @@ class Snake:
                 direction.value == 'UP' and current_direction == 'DOWN' or
                 direction.value == 'DOWN' and current_direction == 'UP'):
             return
-
         self.head.direction = direction
         turn = Node(self.head.x, self.head.y, direction)
         for node in self.nodes[1:]:
